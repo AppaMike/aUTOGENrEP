@@ -1,0 +1,86 @@
+body {
+  background-color: #0b0b0b;
+  color: #e0e0e0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 800px;
+  background: #151515;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 0 20px rgba(255, 255, 0, 0.2);
+  text-align: center;
+}
+
+h1 {
+  color: #ffd700;
+  margin-bottom: 0;
+}
+
+h3 {
+  color: #00a86b;
+  font-weight: 400;
+}
+
+#chat-box {
+  background: #202020;
+  border-radius: 10px;
+  height: 360px;
+  overflow-y: auto;
+  margin: 15px 0;
+  padding: 10px;
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.agent {
+  background: #1c1c1c;
+  border-left: 4px solid #00a86b;
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+form {
+  display: flex;
+  gap: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: #2a2a2a;
+  color: #fff;
+}
+
+button {
+  background: #00a86b;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+button:hover {
+  background: #008c5a;
+}
+
+footer {
+  margin-top: 15px;
+  color: #888;
+  font-size: 13px;
+}
