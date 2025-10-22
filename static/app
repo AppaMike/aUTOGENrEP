@@ -1,39 +1,43 @@
 const form = document.getElementById("chat-form");
+const promptInput = document.getElementById("prompt");
 const chatBox = document.getElementById("chat-box");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const prompt = document.getElementById("prompt").value.trim();
-  if (!prompt) return;
-  document.getElementById("prompt").value = "";
+  const userMessage = promptInput.value.trim();
+  if (!userMessage) return;
 
-  chatBox.innerHTML += `<div><b>👤 Tú:</b> ${prompt}</div>`;
-  chatBox.scrollTop = chatBox.scrollHeight;
+  addMessage(userMessage, "user");
+  promptInput.value = "";
+  addMessage("💭 Escribiendo respuesta...", "agent");
 
   try {
-    const res = await fetch("/deploy", {
+    const response = await fetch("/deploy", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({ prompt: userMessage }),
     });
 
-    const data = await res.json();
-
+    const data = await response.json();
+    chatBox.lastChild.remove(); // eliminar "Escribiendo..."
     if (data.status === "success") {
-      data.responses.forEach((r) => {
-        const response =
-          r.response || `⚠️ Error en ${r.agent}: ${r.error || "sin detalle"}`;
-        chatBox.innerHTML += `
-          <div class="agent">
-            <b>${r.agent}:</b> ${response}
-          </div>`;
+      data.responses.forEach((res) => {
+        const text = res.response || `⚠️ Error: ${res.error}`;
+        addMessage(`${res.agent}: ${text}`, "agent");
       });
     } else {
-      chatBox.innerHTML += `<div class="agent"><b>❌ Error:</b> ${data.message}</div>`;
+      addMessage("⚠️ Error procesando la solicitud.", "agent");
     }
   } catch (err) {
-    chatBox.innerHTML += `<div class="agent"><b>❌ Error de conexión:</b> ${err}</div>`;
+    chatBox.lastChild.remove();
+    addMessage("⚠️ Error de conexión con el servidor.", "agent");
   }
-
-  chatBox.scrollTop = chatBox.scrollHeight;
 });
+
+function addMessage(text, sender) {
+  const msg = document.createElement("div");
+  msg.classList.add("message", sender);
+  msg.textContent = text;
+  chatBox.appendChild(msg);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
