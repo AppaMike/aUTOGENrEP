@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🌞 Equity Solar Operations</title>
-  <!-- CORRECTO: Flask sirve desde /static -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -12,9 +11,9 @@
     <h1>🌞 Equity Solar Operations</h1>
     <h3>Equipo AutoGen Multi-Agente</h3>
 
-    <div id="chat-box"></div>
+    <div id="chat-box" class="chat-box"></div>
 
-    <form id="chat-form">
+    <form id="chat-form" class="chat-form">
       <input type="text" id="prompt" placeholder="Escribe tu mensaje..." required />
       <button type="submit">Enviar</button>
     </form>
@@ -24,7 +23,6 @@
     </footer>
   </div>
 
-  <!-- CORRECTO: uso de url_for -->
   <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
