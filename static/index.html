@@ -3,26 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌞 Equity Solar Operations</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>🌞 Equity Solar Operations | Chat Multi-Agente</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🌞 Equity Solar Operations</h1>
-    <h3>Equipo AutoGen Multi-Agente</h3>
+  <div class="chat-wrapper">
+    <header>
+      <h1>🌞 Equity Solar Operations</h1>
+      <p class="subtitle">Sistema Multi-Agente AutoGen conectado al backend Flask</p>
+    </header>
 
-    <div id="chat-box" class="chat-box"></div>
+    <main id="chat-box"></main>
 
-    <form id="chat-form" class="chat-form">
-      <input type="text" id="prompt" placeholder="Escribe tu mensaje..." required />
-      <button type="submit">Enviar</button>
+    <form id="chat-form">
+      <input id="user-input" type="text" placeholder="Escribe un mensaje para el equipo solar..." required />
+      <button type="submit">Enviar 🚀</button>
     </form>
 
     <footer>
-      v1.0 — Sistema AutoGen conectado al backend de despliegue.
+      <p>Desarrollado con Flask + OpenAI | Render Deploy</p>
     </footer>
   </div>
 
-  <script src="{{ url_for('static', filename='app.js') }}"></script>
+  <script src="/static/app.js" defer></script>
 </body>
 </html>
