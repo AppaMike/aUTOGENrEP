@@ -1,44 +1,44 @@
-from flask import Flask, request, jsonify, render_template
-from openai import OpenAI
+from flask import Flask, request, jsonify, send_from_directory
 import json
+import openai
 import datetime
 import os
 
-# =========================================================
+# ================================================
 # CONFIGURACIÓN BASE
-# =========================================================
-app = Flask(__name__, static_folder="static", static_url_path="", template_folder="static")
+# ================================================
+app = Flask(__name__, static_folder="static")
 
 TEAM_FILE = "team-config.json"
 
-# Cargar agentes desde el archivo de configuración
+# Cargar agentes desde el archivo
 with open(TEAM_FILE, "r", encoding="utf-8") as f:
     team_data = json.load(f)["config"]["participants"]
 
 
-# =========================================================
-# RUTA DE INICIO (API)
-# =========================================================
+# ================================================
+# ENDPOINT PRINCIPAL (API STATUS)
+# ================================================
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({
         "status": "ok",
-        "message": "☀️ API de AutoGen Solar Operaciones está activa.",
+        "message": "🌞 API de AutoGen Solar Operaciones está activa.",
         "usage": "Envía un POST a /deploy con {'prompt': 'tu mensaje'}"
     })
 
 
-# =========================================================
-# RUTA DE INTERFAZ WEB (chat visual)
-# =========================================================
-@app.route("/chat")
-def chat():
-    return app.send_static_file("index.html")
+# ================================================
+# ENDPOINT DE LA INTERFAZ /chat
+# ================================================
+@app.route("/chat", methods=["GET"])
+def chat_ui():
+    return send_from_directory("static", "index.html")
 
 
-# =========================================================
-# ENDPOINT DE DEPLOY (actualizado sin 'proxies')
-# =========================================================
+# ================================================
+# ENDPOINT DE DEPLOY (LLAMADA A AGENTES)
+# ================================================
 @app.route("/deploy", methods=["POST"])
 def deploy():
     try:
@@ -58,11 +58,12 @@ def deploy():
             system_msg = cfg["system_message"]
             name = cfg["name"]
 
+            openai.api_key = api_key
             print(f"\n🚀 Ejecutando {name}...")
 
             try:
-                client = OpenAI(api_key=api_key)
-                response = client.chat.completions.create(
+                # Llamada a la API de OpenAI (corregida)
+                response = openai.chat.completions.create(
                     model=model,
                     messages=[
                         {"role": "system", "content": system_msg},
@@ -78,7 +79,7 @@ def deploy():
                 responses.append({"agent": name, "error": str(e)})
                 print(f"❌ Error en {name}: {e}")
 
-        # Guardar log
+        # Guardar log local
         log_file = f"deploy_log_{timestamp}.json"
         with open(log_file, "w", encoding="utf-8") as f:
             json.dump(responses, f, indent=2, ensure_ascii=False)
@@ -96,9 +97,17 @@ def deploy():
         })
 
 
-# =========================================================
+# ================================================
+# SERVIR ARCHIVOS ESTÁTICOS (CSS, JS)
+# ================================================
+@app.route("/static/<path:path>")
+def send_static(path):
+    return send_from_directory("static", path)
+
+
+# ================================================
 # EJECUCIÓN LOCAL / DEPLOY
-# =========================================================
+# ================================================
 if __name__ == "__main__":
-    # host=0.0.0.0 es necesario para Render
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
