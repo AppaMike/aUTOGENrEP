@@ -1,5 +1,5 @@
 {
-  "provider": "autogen_agentchat.teams.RoundRobinGroupChat",
+  "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
   "component_type": "team",
   "version": 1,
   "component_version": 1,
@@ -33,7 +33,7 @@
         }
       },
       {
-        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
         "component_type": "agent",
         "version": 1,
         "component_version": 1,
@@ -58,7 +58,7 @@
         }
       },
       {
-        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
         "component_type": "agent",
         "version": 1,
         "component_version": 1,
@@ -83,7 +83,7 @@
         }
       },
       {
-        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
         "component_type": "agent",
         "version": 1,
         "component_version": 1,
@@ -108,7 +108,7 @@
         }
       },
       {
-        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
         "component_type": "agent",
         "version": 1,
         "component_version": 1,
@@ -134,7 +134,7 @@
       }
     ],
     "termination_condition": {
-      "provider": "autogen_agentchat.base.OrTerminationCondition",
+      "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
       "component_type": "termination",
       "version": 1,
       "component_version": 1,
@@ -142,7 +142,7 @@
       "config": {
         "conditions": [
           {
-            "provider": "autogen_agentchat.conditions.TextMentionTermination",
+           "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
             "component_type": "termination",
             "version": 1,
             "component_version": 1,
@@ -151,7 +151,7 @@
             }
           },
           {
-            "provider": "autogen_agentchat.conditions.MaxMessageTermination",
+            "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
             "component_type": "termination",
             "version": 1,
             "component_version": 1,
