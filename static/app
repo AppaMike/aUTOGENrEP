@@ -1,0 +1,39 @@
+const form = document.getElementById("chat-form");
+const chatBox = document.getElementById("chat-box");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const prompt = document.getElementById("prompt").value.trim();
+  if (!prompt) return;
+  document.getElementById("prompt").value = "";
+
+  chatBox.innerHTML += `<div><b>👤 Tú:</b> ${prompt}</div>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  try {
+    const res = await fetch("/deploy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
+
+    const data = await res.json();
+
+    if (data.status === "success") {
+      data.responses.forEach((r) => {
+        const response =
+          r.response || `⚠️ Error en ${r.agent}: ${r.error || "sin detalle"}`;
+        chatBox.innerHTML += `
+          <div class="agent">
+            <b>${r.agent}:</b> ${response}
+          </div>`;
+      });
+    } else {
+      chatBox.innerHTML += `<div class="agent"><b>❌ Error:</b> ${data.message}</div>`;
+    }
+  } catch (err) {
+    chatBox.innerHTML += `<div class="agent"><b>❌ Error de conexión:</b> ${err}</div>`;
+  }
+
+  chatBox.scrollTop = chatBox.scrollHeight;
+});
