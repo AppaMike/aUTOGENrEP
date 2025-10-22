@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌞 Equity Solar Operations | Chat Multi-Agente</title>
+  <title>🌞 Equity Solar Operations</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -13,10 +13,12 @@
       <p class="subtitle">Sistema Multi-Agente AutoGen conectado al backend Flask</p>
     </header>
 
-    <main id="chat-box"></main>
+    <!-- Aquí aparece la conversación -->
+    <div id="chat-box" class="chat-box"></div>
 
+    <!-- Campo para escribir -->
     <form id="chat-form">
-      <input id="user-input" type="text" placeholder="Escribe un mensaje para el equipo solar..." required />
+      <input id="user-input" type="text" placeholder="Escribe tu mensaje..." required>
       <button type="submit">Enviar 🚀</button>
     </form>
 
@@ -24,7 +26,6 @@
       <p>Desarrollado con Flask + OpenAI | Render Deploy</p>
     </footer>
   </div>
-
   <script src="/static/app.js" defer></script>
 </body>
 </html>

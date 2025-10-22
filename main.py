@@ -1,25 +1,23 @@
-from flask import Flask, request, jsonify, render_template
-from openai import OpenAI
+from flask import Flask, request, jsonify, send_from_directory, render_template_string
 import json
+import openai
 import datetime
 import os
 
-# =========================================================
-# CONFIGURACIÓN BASE
-# =========================================================
-app = Flask(__name__, static_folder="static", static_url_path="", template_folder="static")
+app = Flask(__name__, static_folder="static")
 
 TEAM_FILE = "team-config.json"
 
-# Cargar agentes desde el archivo de configuración
+# ===============================
+# Cargar configuración de agentes
+# ===============================
 with open(TEAM_FILE, "r", encoding="utf-8") as f:
     team_data = json.load(f)["config"]["participants"]
 
-
-# =========================================================
-# RUTA DE INICIO (API)
-# =========================================================
-@app.route("/", methods=["GET"])
+# ===============================
+# Página principal (Frontend)
+# ===============================
+@app.route("/")
 def home():
     return jsonify({
         "status": "ok",
@@ -27,27 +25,19 @@ def home():
         "usage": "Envía un POST a /deploy con {'prompt': 'tu mensaje'}"
     })
 
-
-# =========================================================
-# RUTA DE INTERFAZ WEB (chat visual)
-# =========================================================
 @app.route("/chat")
 def chat():
-    return app.send_static_file("index.html")
+    # Servir el archivo index.html desde la carpeta static
+    return send_from_directory(app.static_folder, "index.html")
 
-
-# =========================================================
-# ENDPOINT DE DEPLOY (actualizado sin 'proxies')
-# =========================================================
+# ===============================
+# Endpoint de despliegue
+# ===============================
 @app.route("/deploy", methods=["POST"])
 def deploy():
     try:
         data = request.get_json()
-        user_prompt = data.get(
-            "prompt",
-            "Describe tu rol dentro del equipo solar y confirma que estás listo para iniciar el despliegue."
-        )
-
+        user_prompt = data.get("prompt", "Describe tu rol dentro del equipo solar y confirma que estás listo para iniciar el despliegue.")
         responses = []
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
@@ -58,18 +48,17 @@ def deploy():
             system_msg = cfg["system_message"]
             name = cfg["name"]
 
-            print(f"\n🚀 Ejecutando {name}...")
+            openai.api_key = api_key
+            print(f"🚀 Ejecutando {name}...")
 
             try:
-                client = OpenAI(api_key=api_key)
-                response = client.chat.completions.create(
+                response = openai.chat.completions.create(
                     model=model,
                     messages=[
                         {"role": "system", "content": system_msg},
                         {"role": "user", "content": user_prompt}
                     ]
                 )
-
                 msg = response.choices[0].message.content
                 responses.append({"agent": name, "response": msg})
                 print(f"💬 {name}: {msg[:120]}...")
@@ -95,10 +84,15 @@ def deploy():
             "message": str(e)
         })
 
+# ===============================
+# Servir archivos estáticos (CSS, JS)
+# ===============================
+@app.route("/static/<path:filename>")
+def static_files(filename):
+    return send_from_directory(app.static_folder, filename)
 
-# =========================================================
-# EJECUCIÓN LOCAL / DEPLOY
-# =========================================================
+# ===============================
+# Ejecución local / Render
+# ===============================
 if __name__ == "__main__":
-    # host=0.0.0.0 es necesario para Render
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(host="0.0.0.0", port=8080)

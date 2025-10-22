@@ -9,7 +9,6 @@ form.addEventListener("submit", async (e) => {
 
   appendMessage("user", text);
   input.value = "";
-
   appendMessage("agent", "⏳ Procesando solicitud...");
 
   try {
@@ -20,7 +19,7 @@ form.addEventListener("submit", async (e) => {
     });
 
     const data = await res.json();
-    chatBox.lastChild.remove(); // elimina el mensaje de espera
+    chatBox.lastChild.remove();
 
     if (data.status === "success") {
       data.responses.forEach((r) => {
@@ -30,7 +29,7 @@ form.addEventListener("submit", async (e) => {
         appendMessage("agent", msg, true);
       });
     } else {
-      appendMessage("error", "❌ Error en el servidor: " + data.message);
+      appendMessage("error", "❌ Error del servidor: " + data.message);
     }
   } catch (err) {
     chatBox.lastChild.remove();
@@ -38,10 +37,10 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-function appendMessage(role, text, isHTML = false) {
+function appendMessage(role, text, html = false) {
   const div = document.createElement("div");
   div.classList.add("message", role);
-  if (isHTML) div.innerHTML = text;
+  if (html) div.innerHTML = text;
   else div.textContent = text;
   chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
