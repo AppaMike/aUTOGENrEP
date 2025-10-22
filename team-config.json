@@ -27,7 +27,7 @@
             "label": "OpenAIChatCompletionClient",
             "config": {
               "model": "gpt-4o-mini",
-              "api_key": "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"
+              "api_key": "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"
             }
           }
         }
@@ -52,7 +52,7 @@
             "label": "OpenAIChatCompletionClient",
             "config": {
               "model": "gpt-4o-mini",
-              "api_key": "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"
+              "api_key": "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"
             }
           }
         }
@@ -77,7 +77,7 @@
             "label": "OpenAIChatCompletionClient",
             "config": {
               "model": "gpt-4o-mini",
-              "api_key": "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"
+              "api_key": "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"
             }
           }
         }
@@ -102,7 +102,7 @@
             "label": "OpenAIChatCompletionClient",
             "config": {
               "model": "gpt-4o-mini",
-              "api_key": "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"
+              "api_key": "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"
             }
           }
         }
@@ -127,7 +127,7 @@
             "label": "OpenAIChatCompletionClient",
             "config": {
               "model": "gpt-4o-mini",
-              "api_key": "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"
+              "api_key": "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"
             }
           }
         }
@@ -162,20 +162,6 @@
         ]
       }
     },
-    "emit_team_events": false,
-    "workflows": {
-      "default": {
-        "provider": "autogen_agentchat.teams.RoundRobinGroupChat",
-        "participants": [
-          "PlannerAgent",
-          "PermitsAgent",
-          "InventoryAgent",
-          "ClientAgent",
-          "MonitoringAgent"
-        ],
-        "inputs": {},
-        "outputs": {}
-      }
-    }
+    "emit_team_events": false
   }
 }
