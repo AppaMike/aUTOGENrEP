@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, render_template_string
+from flask import Flask, request, jsonify, send_from_directory
 import json
 import openai
 import datetime
@@ -14,6 +14,13 @@ TEAM_FILE = "team-config.json"
 with open(TEAM_FILE, "r", encoding="utf-8") as f:
     team_data = json.load(f)["config"]["participants"]
 
+# 🔧 Limpieza preventiva de configuraciones obsoletas
+for agent in team_data:
+    cfg = agent["config"]
+    model_cfg = cfg.get("model_client", {}).get("config", {})
+    if "proxies" in model_cfg:
+        del model_cfg["proxies"]  # elimina cualquier residuo del campo
+
 # ===============================
 # Página principal (Frontend)
 # ===============================
@@ -27,7 +34,6 @@ def home():
 
 @app.route("/chat")
 def chat():
-    # Servir el archivo index.html desde la carpeta static
     return send_from_directory(app.static_folder, "index.html")
 
 # ===============================
@@ -67,7 +73,6 @@ def deploy():
                 responses.append({"agent": name, "error": str(e)})
                 print(f"❌ Error en {name}: {e}")
 
-        # Guardar log
         log_file = f"deploy_log_{timestamp}.json"
         with open(log_file, "w", encoding="utf-8") as f:
             json.dump(responses, f, indent=2, ensure_ascii=False)
@@ -84,15 +89,10 @@ def deploy():
             "message": str(e)
         })
 
-# ===============================
-# Servir archivos estáticos (CSS, JS)
-# ===============================
 @app.route("/static/<path:filename>")
 def static_files(filename):
     return send_from_directory(app.static_folder, filename)
 
-# ===============================
-# Ejecución local / Render
-# ===============================
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
+
