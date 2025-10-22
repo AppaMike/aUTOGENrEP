@@ -1,2 +1,5 @@
-flask==3.0.3
-openai==1.52.0
+flask
+openai>=1.12.0
+autogen-agentchat>=0.7.6
+autogen-ext>=0.2.3
+python-dotenv
