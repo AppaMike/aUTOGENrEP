@@ -1,0 +1,181 @@
+{
+  "provider": "autogen_agentchat.teams.RoundRobinGroupChat",
+  "component_type": "team",
+  "version": 1,
+  "component_version": 1,
+  "description": "Equipo multiagente para gestión de proyectos solares en Equity Solar.",
+  "label": "EquitySolarTeam",
+  "config": {
+    "participants": [
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "label": "PlannerAgent",
+        "config": {
+          "name": "PlannerAgent",
+          "system_message": "Eres un agente planificador de proyectos solares. Lees datos del CRM, consultas a los agentes de permisos e inventario antes de fijar fechas y notificas sobre tareas críticas.",
+          "description": "Coordina cronogramas de instalación solar desde contrato hasta energización.",
+          "reflect_on_tool_use": false,
+          "tool_call_summary_format": "{result}",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "label": "OpenAIChatCompletionClient",
+            "config": {
+              "model": "gpt-4o-mini",
+              "api_key": "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"
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "label": "PermitsAgent",
+        "config": {
+          "name": "PermitsAgent",
+          "system_message": "Eres un agente encargado de permisos e interconexiones. Rastreas requisitos por ciudad, envías solicitudes, haces seguimiento automático y alertas al planificador cuando un permiso sea aprobado o rechazado.",
+          "description": "Gestiona permisos municipales y de interconexión con las utilities.",
+          "reflect_on_tool_use": false,
+          "tool_call_summary_format": "{result}",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "label": "OpenAIChatCompletionClient",
+            "config": {
+              "model": "gpt-4o-mini",
+              "api_key": "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"
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "label": "InventoryAgent",
+        "config": {
+          "name": "InventoryAgent",
+          "system_message": "Eres un agente responsable de inventario y logística. Monitorea el stock en tiempo real, coordina pedidos con proveedores y ajusta entregas según el calendario del planificador. Si detectas escasez o retrasos, propones sustituciones aprobadas y notificas al planificador.",
+          "description": "Supervisa el inventario y la logística de materiales solares.",
+          "reflect_on_tool_use": false,
+          "tool_call_summary_format": "{result}",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "label": "OpenAIChatCompletionClient",
+            "config": {
+              "model": "gpt-4o-mini",
+              "api_key": "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"
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "label": "ClientAgent",
+        "config": {
+          "name": "ClientAgent",
+          "system_message": "Eres un agente de comunicación con el cliente. Envías actualizaciones automáticas sobre el estado del proyecto y permisos, respondes preguntas frecuentes y solicitas documentos pendientes como facturas eléctricas o aprobaciones HOA.",
+          "description": "Mantiene informado al cliente durante todo el proyecto y gestiona su experiencia.",
+          "reflect_on_tool_use": false,
+          "tool_call_summary_format": "{result}",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "label": "OpenAIChatCompletionClient",
+            "config": {
+              "model": "gpt-4o-mini",
+              "api_key": "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"
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "label": "MonitoringAgent",
+        "config": {
+          "name": "MonitoringAgent",
+          "system_message": "Eres un agente encargado del monitoreo post-instalación. Te conectas al software de monitoreo de inversores, detectas fallas o baja producción y generas tickets automáticos para soporte. Envías reportes de rendimiento al cliente y programas mantenimiento preventivo.",
+          "description": "Supervisa el rendimiento del sistema solar después de la energización.",
+          "reflect_on_tool_use": false,
+          "tool_call_summary_format": "{result}",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "label": "OpenAIChatCompletionClient",
+            "config": {
+              "model": "gpt-4o-mini",
+              "api_key": "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"
+            }
+          }
+        }
+      }
+    ],
+    "termination_condition": {
+      "provider": "autogen_agentchat.base.OrTerminationCondition",
+      "component_type": "termination",
+      "version": 1,
+      "component_version": 1,
+      "label": "OrTerminationCondition",
+      "config": {
+        "conditions": [
+          {
+            "provider": "autogen_agentchat.conditions.TextMentionTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "config": {
+              "text": "TERMINATE"
+            }
+          },
+          {
+            "provider": "autogen_agentchat.conditions.MaxMessageTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "config": {
+              "max_messages": 10
+            }
+          }
+        ]
+      }
+    },
+    "emit_team_events": false,
+    "workflows": {
+      "default": {
+        "provider": "autogen_agentchat.teams.RoundRobinGroupChat",
+        "participants": [
+          "PlannerAgent",
+          "PermitsAgent",
+          "InventoryAgent",
+          "ClientAgent",
+          "MonitoringAgent"
+        ],
+        "inputs": {},
+        "outputs": {}
+      }
+    }
+  }
+}
