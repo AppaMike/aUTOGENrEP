@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Equity Solar | AutoGen Operations</title>
+  <style>
+    :root {
+      --solar-yellow: #facc15;
+      --solar-green: #22c55e;
+      --solar-blue: #2563eb;
+      --dark-bg: #0e1116;
+      --panel-bg: #1c1f26;
+      --text-light: #f1f5f9;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      font-family: "Segoe UI", Roboto, sans-serif;
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: var(--solar-yellow);
+      margin-bottom: 5px;
+      text-align: center;
+      font-size: 1.8em;
+    }
+
+    h2 {
+      color: var(--solar-blue);
+      font-weight: normal;
+      font-size: 1em;
+      margin-top: 0;
+      text-align: center;
+    }
+
+    #chat-box {
+      width: 90%;
+      max-width: 650px;
+      height: 420px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 15px;
+      overflow-y: auto;
+      background-color: var(--panel-bg);
+      box-shadow: 0 0 12px rgba(250, 204, 21, 0.15);
+    }
+
+    .msg {
+      margin: 10px 0;
+      padding: 10px 14px;
+      border-radius: 8px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .user {
+      background-color: var(--solar-blue);
+      align-self: flex-end;
+      text-align: right;
+      border-top-right-radius: 0;
+    }
+
+    .bot {
+      background-color: #374151;
+      align-self: flex-start;
+      text-align: left;
+      border-top-left-radius: 0;
+    }
+
+    #input-area {
+      width: 90%;
+      max-width: 650px;
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    #prompt {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: #2a2e36;
+      color: white;
+      font-size: 1em;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: var(--solar-green);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #16a34a;
+    }
+
+    footer {
+      color: #666;
+      font-size: 0.8em;
+      margin-top: 25px;
+    }
+  </style>
+</head>
+<body>
+  <h1>☀️ Equity Solar Operations</h1>
+  <h2>Equipo AutoGen Multi-Agente</h2>
+
+  <div id="chat-box"></div>
+
+  <div id="input-area">
+    <input id="prompt" type="text" placeholder="Escribe tu mensaje..." />
+    <button onclick="sendMessage()">Enviar</button>
+  </div>
+
+  <footer>v1.0 — Sistema AutoGen conectado al backend de despliegue.</footer>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const promptInput = document.getElementById("prompt");
+
+    async function sendMessage() {
+      const prompt = promptInput.value.trim();
+      if (!prompt) return;
+
+      // Mostrar mensaje del usuario
+      chatBox.innerHTML += `<div class="msg user">${prompt}</div>`;
+      promptInput.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Mostrar mensaje de carga
+      const loadingMsg = document.createElement("div");
+      loadingMsg.classList.add("msg", "bot");
+      loadingMsg.textContent = "Procesando con el equipo solar...";
+      chatBox.appendChild(loadingMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const response = await fetch("/deploy", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
+
+        const data = await response.json();
+
+        // Quitar mensaje de carga
+        chatBox.removeChild(loadingMsg);
+
+        if (data.status === "success") {
+          data.responses.forEach(agent => {
+            const msgDiv = document.createElement("div");
+            msgDiv.classList.add("msg", "bot");
+            msgDiv.innerHTML = `<b>${agent.agent}:</b><br>${agent.response || agent.error}`;
+            chatBox.appendChild(msgDiv);
+          });
+        } else {
+          chatBox.innerHTML += `<div class="msg bot">❌ Error: ${data.message}</div>`;
+        }
+      } catch (err) {
+        chatBox.removeChild(loadingMsg);
+        chatBox.innerHTML += `<div class="msg bot">❌ Error de conexión: ${err.message}</div>`;
+      }
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Permitir presionar Enter
+    promptInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>
