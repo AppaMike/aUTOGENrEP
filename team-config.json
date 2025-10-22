@@ -1,5 +1,5 @@
 {
-  "provider": "autogen_agentchat.teams.RoundRobinGroupChat",
+  "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
   "component_type": "team",
   "version": 1,
   "component_version": 1,
@@ -17,21 +17,23 @@
           "name": "PlannerAgent",
           "system_message": "Eres un agente planificador de proyectos solares. Lees datos del CRM, consultas a los agentes de permisos e inventario antes de fijar fechas y notificas sobre tareas críticas.",
           "description": "Coordina cronogramas de instalación solar desde contrato hasta energización.",
+          "reflect_on_tool_use": false,
+          "tool_call_summary_format": "{result}",
           "model_client": {
-            "provider": "autogen_agentchat.models.OpenAIChatCompletionClient",
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
             "component_type": "model",
             "version": 1,
             "component_version": 1,
             "label": "OpenAIChatCompletionClient",
             "config": {
               "model": "gpt-4o-mini",
-              "api_key": "${OPENAI_API_KEY}"
+              "api_key": "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"
             }
           }
         }
       },
       {
-        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
         "component_type": "agent",
         "version": 1,
         "component_version": 1,
@@ -40,21 +42,23 @@
           "name": "PermitsAgent",
           "system_message": "Eres un agente encargado de permisos e interconexiones. Rastreas requisitos por ciudad, envías solicitudes, haces seguimiento automático y alertas al planificador cuando un permiso sea aprobado o rechazado.",
           "description": "Gestiona permisos municipales y de interconexión con las utilities.",
+          "reflect_on_tool_use": false,
+          "tool_call_summary_format": "{result}",
           "model_client": {
-            "provider": "autogen_agentchat.models.OpenAIChatCompletionClient",
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
             "component_type": "model",
             "version": 1,
             "component_version": 1,
             "label": "OpenAIChatCompletionClient",
             "config": {
               "model": "gpt-4o-mini",
-              "api_key": "${OPENAI_API_KEY}"
+              "api_key": "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"
             }
           }
         }
       },
       {
-        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
         "component_type": "agent",
         "version": 1,
         "component_version": 1,
@@ -63,21 +67,23 @@
           "name": "InventoryAgent",
           "system_message": "Eres un agente responsable de inventario y logística. Monitorea el stock en tiempo real, coordina pedidos con proveedores y ajusta entregas según el calendario del planificador. Si detectas escasez o retrasos, propones sustituciones aprobadas y notificas al planificador.",
           "description": "Supervisa el inventario y la logística de materiales solares.",
+          "reflect_on_tool_use": false,
+          "tool_call_summary_format": "{result}",
           "model_client": {
-            "provider": "autogen_agentchat.models.OpenAIChatCompletionClient",
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
             "component_type": "model",
             "version": 1,
             "component_version": 1,
             "label": "OpenAIChatCompletionClient",
             "config": {
               "model": "gpt-4o-mini",
-              "api_key": "${OPENAI_API_KEY}"
+              "api_key": "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"
             }
           }
         }
       },
       {
-        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
         "component_type": "agent",
         "version": 1,
         "component_version": 1,
@@ -86,21 +92,23 @@
           "name": "ClientAgent",
           "system_message": "Eres un agente de comunicación con el cliente. Envías actualizaciones automáticas sobre el estado del proyecto y permisos, respondes preguntas frecuentes y solicitas documentos pendientes como facturas eléctricas o aprobaciones HOA.",
           "description": "Mantiene informado al cliente durante todo el proyecto y gestiona su experiencia.",
+          "reflect_on_tool_use": false,
+          "tool_call_summary_format": "{result}",
           "model_client": {
-            "provider": "autogen_agentchat.models.OpenAIChatCompletionClient",
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
             "component_type": "model",
             "version": 1,
             "component_version": 1,
             "label": "OpenAIChatCompletionClient",
             "config": {
               "model": "gpt-4o-mini",
-              "api_key": "${OPENAI_API_KEY}"
+              "api_key": "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"
             }
           }
         }
       },
       {
-        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
         "component_type": "agent",
         "version": 1,
         "component_version": 1,
@@ -109,29 +117,51 @@
           "name": "MonitoringAgent",
           "system_message": "Eres un agente encargado del monitoreo post-instalación. Te conectas al software de monitoreo de inversores, detectas fallas o baja producción y generas tickets automáticos para soporte. Envías reportes de rendimiento al cliente y programas mantenimiento preventivo.",
           "description": "Supervisa el rendimiento del sistema solar después de la energización.",
+          "reflect_on_tool_use": false,
+          "tool_call_summary_format": "{result}",
           "model_client": {
-            "provider": "autogen_agentchat.models.OpenAIChatCompletionClient",
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
             "component_type": "model",
             "version": 1,
             "component_version": 1,
             "label": "OpenAIChatCompletionClient",
             "config": {
               "model": "gpt-4o-mini",
-              "api_key": "${OPENAI_API_KEY}"
+              "api_key": "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"
             }
           }
         }
       }
     ],
     "termination_condition": {
-      "provider": "autogen_agentchat.conditions.MaxMessageTermination",
+      "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
       "component_type": "termination",
       "version": 1,
       "component_version": 1,
-      "label": "MaxMessageTermination",
+      "label": "OrTerminationCondition",
       "config": {
-        "max_messages": 10
+        "conditions": [
+          {
+           "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "config": {
+              "text": "TERMINATE"
+            }
+          },
+          {
+            "provider": "autogen_agentchat.models.openai.OpenAIChatCompletionClient",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "config": {
+              "max_messages": 10
+            }
+          }
+        ]
       }
-    }
+    },
+    "emit_team_events": false
   }
 }
