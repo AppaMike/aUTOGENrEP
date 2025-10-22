@@ -1,23 +1,24 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from openai import OpenAI
 import json
 import datetime
 import os
 
-# ================================================
+# =========================================================
 # CONFIGURACIÓN BASE
-# ================================================
-app = Flask(__name__)
+# =========================================================
+app = Flask(__name__, static_folder="static", static_url_path="", template_folder="static")
 
 TEAM_FILE = "team-config.json"
 
-# Cargar configuración de agentes
+# Cargar agentes desde el archivo de configuración
 with open(TEAM_FILE, "r", encoding="utf-8") as f:
     team_data = json.load(f)["config"]["participants"]
 
-# ================================================
-# ENDPOINT PRINCIPAL
-# ================================================
+
+# =========================================================
+# RUTA DE INICIO (API)
+# =========================================================
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({
@@ -27,9 +28,17 @@ def home():
     })
 
 
-# ================================================
-# ENDPOINT DE DEPLOY
-# ================================================
+# =========================================================
+# RUTA DE INTERFAZ WEB (chat visual)
+# =========================================================
+@app.route("/chat")
+def chat():
+    return app.send_static_file("index.html")
+
+
+# =========================================================
+# ENDPOINT DE DEPLOY (actualizado sin 'proxies')
+# =========================================================
 @app.route("/deploy", methods=["POST"])
 def deploy():
     try:
@@ -52,9 +61,7 @@ def deploy():
             print(f"\n🚀 Ejecutando {name}...")
 
             try:
-                # Crear cliente OpenAI con la nueva sintaxis
                 client = OpenAI(api_key=api_key)
-
                 response = client.chat.completions.create(
                     model=model,
                     messages=[
@@ -65,7 +72,7 @@ def deploy():
 
                 msg = response.choices[0].message.content
                 responses.append({"agent": name, "response": msg})
-                print(f"💬 {name}: {msg[:120]}...")  # muestra primer fragmento
+                print(f"💬 {name}: {msg[:120]}...")
 
             except Exception as e:
                 responses.append({"agent": name, "error": str(e)})
@@ -89,17 +96,9 @@ def deploy():
         })
 
 
-# ================================================
-# SERVIR INTERFAZ WEB (opcional)
-# ================================================
-@app.route("/chat", methods=["GET"])
-def chat_ui():
-    return app.send_static_file("index.html")
-
-
-# ================================================
-# EJECUCIÓN LOCAL / RENDER
-# ================================================
+# =========================================================
+# EJECUCIÓN LOCAL / DEPLOY
+# =========================================================
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port)
+    # host=0.0.0.0 es necesario para Render
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
