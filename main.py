@@ -1,35 +1,25 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
+from openai import OpenAI
 import json
-import openai
 import datetime
 import os
 
 # ================================================
 # CONFIGURACIÓN BASE
 # ================================================
-app = Flask(__name__, static_folder="static")
+app = Flask(__name__)
 
 TEAM_FILE = "team-config.json"
 
-# Cargar agentes desde el archivo
+# Cargar configuración de agentes
 with open(TEAM_FILE, "r", encoding="utf-8") as f:
     team_data = json.load(f)["config"]["participants"]
 
 # ================================================
-# SERVIR LA INTERFAZ HTML
+# ENDPOINT PRINCIPAL
 # ================================================
 @app.route("/", methods=["GET"])
 def home():
-    """Muestra la página principal (interfaz visual)."""
-    return send_from_directory("static", "index.html")
-
-
-# ================================================
-# ENDPOINT DE ESTADO
-# ================================================
-@app.route("/status", methods=["GET"])
-def status():
-    """Endpoint básico para verificar que la API esté activa."""
     return jsonify({
         "status": "ok",
         "message": "☀️ API de AutoGen Solar Operaciones está activa.",
@@ -42,7 +32,6 @@ def status():
 # ================================================
 @app.route("/deploy", methods=["POST"])
 def deploy():
-    """Procesa el mensaje del usuario y coordina respuestas entre los agentes."""
     try:
         data = request.get_json()
         user_prompt = data.get(
@@ -60,20 +49,23 @@ def deploy():
             system_msg = cfg["system_message"]
             name = cfg["name"]
 
-            openai.api_key = api_key
             print(f"\n🚀 Ejecutando {name}...")
 
             try:
-                response = openai.chat.completions.create(
+                # Crear cliente OpenAI con la nueva sintaxis
+                client = OpenAI(api_key=api_key)
+
+                response = client.chat.completions.create(
                     model=model,
                     messages=[
                         {"role": "system", "content": system_msg},
                         {"role": "user", "content": user_prompt}
                     ]
                 )
+
                 msg = response.choices[0].message.content
                 responses.append({"agent": name, "response": msg})
-                print(f"💬 {name}: {msg[:120]}...")
+                print(f"💬 {name}: {msg[:120]}...")  # muestra primer fragmento
 
             except Exception as e:
                 responses.append({"agent": name, "error": str(e)})
@@ -95,6 +87,14 @@ def deploy():
             "status": "error",
             "message": str(e)
         })
+
+
+# ================================================
+# SERVIR INTERFAZ WEB (opcional)
+# ================================================
+@app.route("/chat", methods=["GET"])
+def chat_ui():
+    return app.send_static_file("index.html")
 
 
 # ================================================
