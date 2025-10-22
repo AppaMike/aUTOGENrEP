@@ -3,6 +3,10 @@ import json
 import openai
 import datetime
 import os
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env
+load_dotenv()
 
 app = Flask(__name__, static_folder="static")
 
@@ -14,12 +18,11 @@ TEAM_FILE = "team-config.json"
 with open(TEAM_FILE, "r", encoding="utf-8") as f:
     team_data = json.load(f)["config"]["participants"]
 
-# 🔧 Limpieza preventiva de configuraciones obsoletas
-for agent in team_data:
-    cfg = agent["config"]
-    model_cfg = cfg.get("model_client", {}).get("config", {})
-    if "proxies" in model_cfg:
-        del model_cfg["proxies"]  # elimina cualquier residuo del campo
+# Obtener API key desde variable de entorno
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+if not OPENAI_API_KEY:
+    raise ValueError("❌ OPENAI_API_KEY no está configurada en las variables de entorno")
 
 # ===============================
 # Página principal (Frontend)
@@ -49,16 +52,16 @@ def deploy():
 
         for agent in team_data:
             cfg = agent["config"]
-            api_key = cfg["model_client"]["config"]["api_key"]
             model = cfg["model_client"]["config"]["model"]
             system_msg = cfg["system_message"]
             name = cfg["name"]
 
-            openai.api_key = api_key
             print(f"🚀 Ejecutando {name}...")
 
             try:
-                response = openai.chat.completions.create(
+                # Usar el cliente moderno de OpenAI
+                client = openai.OpenAI(api_key=OPENAI_API_KEY)
+                response = client.chat.completions.create(
                     model=model,
                     messages=[
                         {"role": "system", "content": system_msg},
@@ -73,6 +76,7 @@ def deploy():
                 responses.append({"agent": name, "error": str(e)})
                 print(f"❌ Error en {name}: {e}")
 
+        # Guardar log de respuestas
         log_file = f"deploy_log_{timestamp}.json"
         with open(log_file, "w", encoding="utf-8") as f:
             json.dump(responses, f, indent=2, ensure_ascii=False)
@@ -94,5 +98,6 @@ def static_files(filename):
     return send_from_directory(app.static_folder, filename)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
-
+    # Puerto para Render o local
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
